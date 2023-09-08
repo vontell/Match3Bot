@@ -5,7 +5,7 @@
 export function configureBot(rg) {
 
     rg.isSpawnable = false;
-    rg.lifecycle = "MANAGED";
+    rg.lifecycle = "PERSISTENT";
     rg.characterConfig = { 
         // fill in custom keys + values to help seat and spawn your bot
     };
