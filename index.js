@@ -32,12 +32,25 @@ export async function processTick(rg) {
     const swaps = findPossibleSwaps(tiles);
     swapHistory.push(swaps.length);
     // From the possible swaps, choose a random one
-    if (swaps) {
+    if (swaps.length == 0) {
+          console.log("ERROR - Encountered state with 0 swaps available")
+          rg.recordFailure("Encountered state with 0 swaps available", -1)
+          console.log("-------------------------")
+          console.log("Results for scene (Validation Failed) " + rg.getState().sceneName)
+          console.log(`Total moves taken: ${swapHistory.length}`)
+          console.log(`Most number of swaps available: ${Math.max(...swapHistory)}`)
+          console.log(`Minimum number of swaps available: ${Math.min(...swapHistory)}`)
+          console.log(`Average number of swaps available: ${swapHistory.reduce((a, b) => a + b) / swapHistory.length}`)
+          console.log("-------------------------")
+          rg.complete();
+        return;
+    } else {
         if (swaps.length == 1) {
-          console.log("WARNING - Encountered state with only 1 swap available")
+            console.log("WARNING - Encountered state with only 1 swap available")
         } else {
-          console.log("Choosing from " + swaps.length + " possible swaps")
+            console.log("Choosing from " + swaps.length + " possible swaps")
         }
+        rg.recordSuccess(`Encountered state with ${swaps.length} swap(s) available`, -1)
         const swap = swaps[Math.floor(Math.random() * swaps.length)];
         console.log(`New Action - Swapping (${swap[0]},${swap[1]}) with (${swap[2]},${swap[3]})`)
         rg.performAction("Swipe", {
@@ -46,8 +59,6 @@ export async function processTick(rg) {
             x2: swap[2],
             y2: swap[3]
         });
-    } else {
-        console.log("ERROR - Encountered state with only 0 swaps available")
     }
 }
 
