@@ -33,8 +33,11 @@ export async function processTick(rg) {
     swapHistory.push(swaps.length);
     // From the possible swaps, choose a random one
     if (swaps) {
-        if (swaps.length == 1) console.log("WARNING - Encountered state with only 1 swap available")
-        else console.log("Choosing from " + swaps.length + " possible swaps")
+        if (swaps.length == 1) {
+          console.log("WARNING - Encountered state with only 1 swap available")
+        } else {
+          console.log("Choosing from " + swaps.length + " possible swaps")
+        }
         const swap = swaps[Math.floor(Math.random() * swaps.length)];
         console.log(`New Action - Swapping (${swap[0]},${swap[1]}) with (${swap[2]},${swap[3]})`)
         rg.performAction("Swipe", {
@@ -44,7 +47,7 @@ export async function processTick(rg) {
             y2: swap[3]
         });
     } else {
-      if (swaps.length == 1) console.log("ERROR - Encountered state with only 0 swaps available")
+        console.log("ERROR - Encountered state with only 0 swaps available")
     }
 }
 
