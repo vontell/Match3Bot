@@ -41,7 +41,7 @@ export async function processTick(rg) {
         } else {
             console.log("Choosing from " + swaps.length + " possible swaps")
         }
-        rg.recordSuccess(`Encountered state with {swaps.length} swap(s) available`, -1)
+        rg.recordSuccess(`Encountered state with ${swaps.length} swap(s) available`, -1)
         const swap = swaps[Math.floor(Math.random() * swaps.length)];
         console.log(`New Action - Swapping (${swap[0]},${swap[1]}) with (${swap[2]},${swap[3]})`)
         rg.performAction("Swipe", {
