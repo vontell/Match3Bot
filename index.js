@@ -24,6 +24,7 @@ export async function processTick(rg) {
       console.log(`Average number of swaps available: ${swapHistory.reduce((a, b) => a + b) / swapHistory.length}`)
       console.log("-------------------------")
       rg.complete();
+      return;
     }
 
     const board = await rg.findEntity("Board", false);
