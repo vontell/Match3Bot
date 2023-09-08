@@ -72,11 +72,11 @@ function findPossibleSwaps(board) {
               currentX < board.length &&
               currentY >= 0 &&
               currentY < board[0].length &&
-              board[currentX][currentY] === board[x][y]
+              board[currentX][currentY] === board[x + ox][y + oy]
             ) {
               count++;
-              currentX += dx * i;
-              currentY += dy * i;
+              currentX += dx;
+              currentY += dy;
             }
             if (count >= 3) {
               return true;
