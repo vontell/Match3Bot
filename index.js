@@ -35,6 +35,15 @@ export async function processTick(rg) {
     if (swaps.length == 0) {
           console.log("ERROR - Encountered state with 0 swaps available")
           rg.recordFailure("Encountered state with 0 swaps available", -1)
+          console.log("-------------------------")
+          console.log("Results for scene (ran for 30 seconds) " + rg.getState().sceneName)
+          console.log(`Total moves taken: ${swapHistory.length}`)
+          console.log(`Most number of swaps available: ${Math.max(...swapHistory)}`)
+          console.log(`Minimum number of swaps available: ${Math.min(...swapHistory)}`)
+          console.log(`Average number of swaps available: ${swapHistory.reduce((a, b) => a + b) / swapHistory.length}`)
+          console.log("-------------------------")
+          rg.complete();
+        return;
     } else {
         if (swaps.length == 1) {
             console.log("WARNING - Encountered state with only 1 swap available")
