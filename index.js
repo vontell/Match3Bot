@@ -24,11 +24,20 @@ export async function processTick(rg) {
     console.log("Tick #:", rg.getState().tick);
     const board = await rg.findEntity("Board", false);
     const tiles = board.tiles;
-    console.log("Tiles")
-    console.log(tiles);
     const swaps = findPossibleSwaps(tiles);
     console.log("Swaps")
     console.log(swaps);
+    // From the possible swaps, choose a random one
+    if (swaps) {
+        const swap = swaps[Math.floor(Math.random() * swaps.length)];
+        console.log("Swapping " + JSON.stringify(swap))
+        rg.performAction("Swipe", {
+            x1: swap[0],
+            y1: swap[1],
+            x2: swap[2],
+            y2: swap[3]
+        });
+    }
     
 }
 
