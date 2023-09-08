@@ -25,4 +25,6 @@ export async function processTick(rg) {
     console.log("Scene Name:", rg.getState().sceneName);
     console.log("Entities in state:", Object.keys(rg.getState().gameState).length);
     console.log(rg.getState().gameState);
+    const board = await rg.findEntity("Board", false);
+    console.log(board);
 }
