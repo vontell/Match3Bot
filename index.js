@@ -14,10 +14,10 @@ export async function processTick(rg) {
     
     // After playing for 10 seconds, quit
     if (!startTime) startTime = new Date().getTime();
-    if (new Date().getTime() - startTime > 10000) {
+    if (new Date().getTime() - startTime > 30000) {
       // Now try to finish
       console.log("-------------------------")
-      console.log("Results for scene (ran for 10 seconds) " + rg.getState().sceneName)
+      console.log("Results for scene (ran for 30 seconds) " + rg.getState().sceneName)
       console.log(`Total moves taken: ${swapHistory.length}`)
       console.log(`Most number of swaps available: ${Math.max(...swapHistory)}`)
       console.log(`Minimum number of swaps available: ${Math.min(...swapHistory)}`)
