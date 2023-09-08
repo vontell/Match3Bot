@@ -3,39 +3,33 @@
  * See our [API Documentation]{@link https://docs.regression.gg/studios/unity/unity-sdk/creating-bots/configuration} for available configuration options and values.
  */
 export function configureBot(rg) {
-
     rg.isSpawnable = false;
     rg.lifecycle = "PERSISTENT";
-    rg.characterConfig = { 
-        // fill in custom keys + values to help seat and spawn your bot
-    };
 }
 
 var startTime = null;
+var swapHistory = [];
 
-/**
- * Implement your code here to define a [PlayTest Bot]{@link https://docs.regression.gg/studios/unity/unity-sdk/creating-bots/playtest-bots}.
- * This method is invoked once each time your Unity integration collects updated state information for your GameObjects.
- * Add your code here to make dynamic decisions based on the current game state.
- * 
- * Note: processTick and startScenario are mutually exclusive
- * 
- * @param rg Exposes the [Regression Games API]{@link https://docs.regression.gg/studios/unity/unity-sdk/creating-bots/configuration} which contains methods for evaluating the game state and queueing behaviors that you've defined as `RGActions`.
- */
 export async function processTick(rg) {
     
     // After playing for 10 seconds, quit
     if (!startTime) startTime = new Date().getTime();
     if (new Date().getTime() - startTime > 10000) {
       // Now try to finish
+      console.log("-------------------------")
+      console.log("Results for scene (ran for 10 seconds) " + rg.getState().sceneName)
+      console.log(`Total moves taken: ${swapHistory.length}`)
+      console.log(`Most number of swaps available: ${Math.max(...swapHistory)}`)
+      console.log(`Minimum number of swaps available: ${Math.min(...swapHistory)}`)
+      console.log(`Average number of swaps available: ${swapHistory.reduce((a, b) => a + b) / swapHistory.length}`)
+      console.log("-------------------------")
       rg.complete();
     }
 
     const board = await rg.findEntity("Board", false);
     const tiles = board.tiles;
     const swaps = findPossibleSwaps(tiles);
-    console.log("Swaps")
-    console.log(swaps);
+    swapHistory.push(swaps.length);
     // From the possible swaps, choose a random one
     if (swaps) {
         if (swaps.length == 1) console.log("WARNING - Encountered state with only 1 swap available")
