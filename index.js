@@ -22,9 +22,75 @@ export function configureBot(rg) {
  */
 export async function processTick(rg) {
     console.log("Tick #:", rg.getState().tick);
-    console.log("Scene Name:", rg.getState().sceneName);
-    console.log("Entities in state:", Object.keys(rg.getState().gameState).length);
-    console.log(rg.getState().gameState);
     const board = await rg.findEntity("Board", false);
-    console.log(board);
+    const tiles = board.tiles;
+    console.log("Tiles")
+    console.log(tiles);
+    const swaps = findPossibleSwaps(tiles);
+    console.log("Swaps")
+    console.log(swaps);
+    
 }
+
+function findPossibleSwaps(board) {
+    const swaps = [];
+  
+    // Function to check if a swap is valid and adds it to the swaps array
+    function checkAndAddSwap(x1, y1, x2, y2) {
+      if (
+        x1 >= 0 &&
+        x1 < board.length &&
+        y1 >= 0 &&
+        y1 < board[0].length &&
+        x2 >= 0 &&
+        x2 < board.length &&
+        y2 >= 0 &&
+        y2 < board[0].length
+      ) {
+        const temp = board[x1][y1];
+        board[x1][y1] = board[x2][y2];
+        board[x2][y2] = temp;
+        if (hasMatch(x1, y1) || hasMatch(x2, y2)) {
+          swaps.push([x1, y1, x2, y2]);
+        }
+        // Undo the swap
+        board[x2][y2] = board[x1][y1];
+        board[x1][y1] = temp;
+      }
+    }
+  
+    // Function to check if there is a match starting at a given position
+    function hasMatch(x, y) {
+      const directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+      for (const [dx, dy] of directions) {
+        let count = 1;
+        let currentX = x + dx;
+        let currentY = y + dy;
+        while (
+          currentX >= 0 &&
+          currentX < board.length &&
+          currentY >= 0 &&
+          currentY < board[0].length &&
+          board[currentX][currentY] === board[x][y]
+        ) {
+          count++;
+          currentX += dx;
+          currentY += dy;
+        }
+        if (count >= 3) {
+          return true;
+        }
+      }
+      return false;
+    }
+  
+    // Iterate through the entire board and check for swaps
+    for (let x = 0; x < board.length; x++) {
+      for (let y = 0; y < board[0].length; y++) {
+        checkAndAddSwap(x, y, x + 1, y);
+        checkAndAddSwap(x, y, x, y + 1);
+      }
+    }
+  
+    return swaps;
+  }
