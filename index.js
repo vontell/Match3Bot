@@ -61,28 +61,30 @@ function findPossibleSwaps(board) {
   
     // Function to check if there is a match starting at a given position
     function hasMatch(x, y) {
-      const directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];
-      for (const [dx, dy] of directions) {
-        let count = 1;
-        let currentX = x + dx;
-        let currentY = y + dy;
-        while (
-          currentX >= 0 &&
-          currentX < board.length &&
-          currentY >= 0 &&
-          currentY < board[0].length &&
-          board[currentX][currentY] === board[x][y]
-        ) {
-          count++;
-          currentX += dx;
-          currentY += dy;
+        const directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+        for (const [dx, dy] of directions) {
+          for (let i = -1; i <= 1; i += 2) {
+            let count = 0;
+            let currentX = x;
+            let currentY = y;
+            while (
+              currentX >= 0 &&
+              currentX < board.length &&
+              currentY >= 0 &&
+              currentY < board[0].length &&
+              board[currentX][currentY] === board[x][y]
+            ) {
+              count++;
+              currentX += dx * i;
+              currentY += dy * i;
+            }
+            if (count >= 3) {
+              return true;
+            }
+          }
         }
-        if (count >= 3) {
-          return true;
-        }
+        return false;
       }
-      return false;
-    }
   
     // Iterate through the entire board and check for swaps
     for (let x = 0; x < board.length; x++) {
