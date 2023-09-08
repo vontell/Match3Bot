@@ -67,6 +67,7 @@ function findPossibleSwaps(board) {
             let count = 0;
             let currentX = x + ox;
             let currentY = y + oy;
+            console.log(currentX, currentY)
             while (
               currentX >= 0 &&
               currentX < board.length &&
