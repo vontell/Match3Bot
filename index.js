@@ -11,6 +11,8 @@ export function configureBot(rg) {
     };
 }
 
+var startTime = null;
+
 /**
  * Implement your code here to define a [PlayTest Bot]{@link https://docs.regression.gg/studios/unity/unity-sdk/creating-bots/playtest-bots}.
  * This method is invoked once each time your Unity integration collects updated state information for your GameObjects.
@@ -21,7 +23,14 @@ export function configureBot(rg) {
  * @param rg Exposes the [Regression Games API]{@link https://docs.regression.gg/studios/unity/unity-sdk/creating-bots/configuration} which contains methods for evaluating the game state and queueing behaviors that you've defined as `RGActions`.
  */
 export async function processTick(rg) {
-    console.log("Tick #:", rg.getState().tick);
+    
+    // After playing for 10 seconds, quit
+    if (!startTime) startTime = new Date().getTime();
+    if (new Date().getTime() - startTime > 10000) {
+      // Now try to finish
+      rg.complete();
+    }
+
     const board = await rg.findEntity("Board", false);
     const tiles = board.tiles;
     const swaps = findPossibleSwaps(tiles);
@@ -29,16 +38,19 @@ export async function processTick(rg) {
     console.log(swaps);
     // From the possible swaps, choose a random one
     if (swaps) {
+        if (swaps.length == 1) console.log("WARNING - Encountered state with only 1 swap available")
+        else console.log("Choosing from " + swaps.length + " possible swaps")
         const swap = swaps[Math.floor(Math.random() * swaps.length)];
-        console.log("Swapping " + JSON.stringify(swap))
+        console.log(`New Action - Swapping (${swap[0]},${swap[1]}) with (${swap[2]},${swap[3]})`)
         rg.performAction("Swipe", {
             x1: swap[0],
             y1: swap[1],
             x2: swap[2],
             y2: swap[3]
         });
+    } else {
+      if (swaps.length == 1) console.log("ERROR - Encountered state with only 0 swaps available")
     }
-    
 }
 
 function findPossibleSwaps(board) {
